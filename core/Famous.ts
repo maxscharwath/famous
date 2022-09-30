@@ -1,5 +1,6 @@
 import { Website } from './Website'
 import { $fetch, FetchError, FetchOptions } from 'ohmyfetch'
+import { useFetch } from '#imports'
 
 export enum QueryStatus {
   UNKNOWN = 'UNKNOWN', //Error Occurred While Trying To Detect Username
@@ -80,4 +81,11 @@ export async function checkUsername (username: string, website: Website): Promis
     ...responseData,
     http_status: response.statusCode,
   };
+}
+
+export async function downloadList(){
+  const url="https://raw.githubusercontent.com/sherlock-project/sherlock/master/sherlock/resources/data.json"
+  return $fetch<Record<string, Website>>(url,{
+    parseResponse: JSON.parse
+  })
 }

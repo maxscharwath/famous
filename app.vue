@@ -1,5 +1,20 @@
 <template>
   <div>
+    <h1 class="mb-4 text-2xl font-bold">
+      Famous
+    </h1>
+
+    <div>
+      <div class="mb-4">
+        <span class="font-bold">City:</span>
+        <span>{{ headers['x-vercel-ip-city'] }}</span>
+      </div>
+      <div class="mb-4">
+        <span class="font-bold">IP:</span>
+        <span>{{ headers['x-forwarded-for'] }}</span>
+      </div>
+    </div>
+
     <ul>
       <li
         v-for="(website, i) in data"
@@ -21,12 +36,9 @@
 </template>
 
 <script lang="ts" setup>
-
 import type { Website } from '~/core/Website'
-import { useFetch } from '#imports'
+import { useFetch, useRequestHeaders } from '#imports'
 
-const url="https://raw.githubusercontent.com/sherlock-project/sherlock/master/sherlock/resources/data.json"
-const { data } = useFetch<Record<string, Website>>(url,{
-  parseResponse: JSON.parse
-})
+const headers = useRequestHeaders(['x-forwarded-for', 'x-vercel-ip-city'])
+const { data } = useFetch<Record<string, Website>>("/api/all")
 </script>
