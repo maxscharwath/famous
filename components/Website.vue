@@ -20,7 +20,7 @@ const { data } = await useAsyncData(id, () => {
   if(!username) {
     return null
   }
-  return $fetch('/api/check', {
+  return globalThis.$fetch('/api/check', {
     method: 'post',
     body: {
       website: props.website,

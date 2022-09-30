@@ -37,8 +37,6 @@
 
 <script lang="ts" setup>
 import type { Website } from '~/core/Website'
-import { useFetch, useRequestHeaders } from '#imports'
-
 const headers = useRequestHeaders(['x-forwarded-for', 'x-vercel-ip-city'])
-const { data } = useFetch<Record<string, Website>>("/api/all")
+const { data } = await useAsyncData(() => globalThis.$fetch<Record<string, Website>>("/api/all"))
 </script>
