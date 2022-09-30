@@ -29,6 +29,7 @@ async function getResponse (username: string, website: Website): Promise<Respons
   const options: FetchOptions<"json"> = {
     method: 'GET',
     redirect: 'follow',
+    cache: 'no-cache',
   }
   if (website.errorType === 'status_code') {
     options.method = 'HEAD';
@@ -43,11 +44,13 @@ async function getResponse (username: string, website: Website): Promise<Respons
       options.body = JSON.stringify(website.request_payload).replaceAll('{}', username)
     }
   }
-  const response = await $fetch.raw(url, options).catch((e:FetchError) => e.response)
-  const data = response.bodyUsed ? null : await response.text()
+  const {response,data} = await $fetch.raw(url, options)
+    .then(async (response) => ({ response, data: `${await response.text()}` }))
+    .catch((e:FetchError) => ({ response: e.response, data: `${e.data}` }))
+
   return {
-    headers: response.headers,
-    statusCode:response.status,
+    headers: response?.headers,
+    statusCode:response?.status,
     data
   }
 }

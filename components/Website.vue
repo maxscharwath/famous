@@ -6,24 +6,28 @@
 
 <script lang="ts" setup>
 
-import { useRoute } from '#imports'
+import {useAsyncData, useRoute } from '#imports'
+import type { Website } from '~/core/Website'
 
 const props = defineProps<{
-  website: any
+  website: Website
 }>()
 
 const username = useRoute().query.username as string;
 
-if(!username) {
-  throw createError({ statusCode: 404, statusMessage: 'Not Found' })
-}
-
-const { data } = useFetch('/api/check', {
-  method: 'post',
-  body: {
+const id = `${props.website.url}-${username}`
+const { data } = await useAsyncData(id, () => {
+  if(!username) {
+    return null
+  }
+  return $fetch('/api/check', {
+    method: 'post',
+    body: {
       website: props.website,
       username
     },
+  })
+},{
   server: false
-  });
+})
 </script>
