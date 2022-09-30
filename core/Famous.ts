@@ -1,5 +1,5 @@
 import { Website } from './Website'
-import { Dispatcher, request } from 'undici'
+import { $fetch, FetchError, FetchOptions } from 'ohmyfetch'
 
 export enum QueryStatus {
   UNKNOWN = 'UNKNOWN', //Error Occurred While Trying To Detect Username
@@ -8,7 +8,11 @@ export enum QueryStatus {
   ILLEGAL = 'ILLEGAL', //Username Not Allowable For This Site
 }
 
-type ResponseData = Pick<Dispatcher.ResponseData, "headers"> & Pick<Dispatcher.ResponseData, "statusCode">  & {data:string}
+type ResponseData = {
+  headers: Headers,
+  statusCode: number,
+  data:string
+}
 
 type Response = {
   url_main:string;
@@ -17,25 +21,21 @@ type Response = {
   http_status: number|null;
 }
 
-export async function downloadWebsiteList (): Promise<Record<string, Website>> {
-  const { body } = await request('https://raw.githubusercontent.com/sherlock-project/sherlock/master/sherlock/resources/data.json')
-  return body.json();
-}
-
 async function getResponse (username: string, website: Website): Promise<ResponseData> {
   const url = website.urlProbe ?
     website.urlProbe.replace('{}', username) :
     website.url.replace('{}', username)
 
-  const options: Partial<Dispatcher.RequestOptions> = {
+  const options: FetchOptions<"json"> = {
     method: 'GET',
-    maxRedirections: 5,
+    redirect: 'follow',
   }
   if (website.errorType === 'status_code') {
     options.method = 'HEAD';
   }
   if (website.errorType === 'response_url') {
-    options.maxRedirections = 0;
+    //no redirect
+    options.redirect = 'manual';
   }
   if (website.request_method) {
     options.method = website.request_method;
@@ -43,11 +43,12 @@ async function getResponse (username: string, website: Website): Promise<Respons
       options.body = JSON.stringify(website.request_payload).replaceAll('{}', username)
     }
   }
-  const response = await request(url, options);
+  const response = await $fetch.raw(url, options).catch((e:FetchError) => e.response)
+  const data = response.bodyUsed ? null : await response.text()
   return {
     headers: response.headers,
-    statusCode:response.statusCode,
-    data: await response.body.text()
+    statusCode:response.status,
+    data
   }
 }
 
