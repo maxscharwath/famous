@@ -49,7 +49,7 @@ async function getResponse (username: string, website: Website): Promise<Respons
   const {response,data} = await $fetch.raw(url, options)
     .then(async (response) => ({ response, data: response._data }))
     .catch((e: FetchError) => {
-      return ({ response: e.response, data: `${e.data}` })
+      return ({ response: e.response, data: e.data })
     })
 
   return {
@@ -75,7 +75,11 @@ export async function checkUsername (username: string, website: Website): Promis
   const response = await getResponse(username, website);
 
   if (website.errorType === 'message') {
-    responseData.status = (response.data).includes(website.errorMsg) ? QueryStatus.AVAILABLE : QueryStatus.CLAIMED
+    if(!response.data){
+      responseData.status = QueryStatus.UNKNOWN;
+    }else {
+      responseData.status = response.data.includes(website.errorMsg) ? QueryStatus.AVAILABLE : QueryStatus.CLAIMED
+    }
   }
   else if (website.errorType === 'status_code') {
     if(response.statusCode === website.errorCode) {
