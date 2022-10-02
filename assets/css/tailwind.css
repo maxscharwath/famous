@@ -12,7 +12,7 @@ body {
 }
 
 ::-webkit-scrollbar {
-   @apply w-1.5;
+   @apply bg-gray-800/10 w-1.5 h-1.5;
 }
 
 /* Track */
@@ -22,7 +22,7 @@ body {
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-   @apply  rounded-full;
+   @apply bg-gray-800/50 rounded-full;
 }
 
 /* Handle on hover */
