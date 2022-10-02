@@ -27,10 +27,11 @@ async function getResponse (username: string, website: Website): Promise<Respons
     website.urlProbe.replace('{}', username) :
     website.url.replace('{}', username)
 
-  const options: FetchOptions<"json"> = {
+  const options: FetchOptions = {
     method: 'GET',
     redirect: 'follow',
     cache: 'no-cache',
+    responseType: 'text',
   }
   if (website.errorType === 'status_code') {
     options.method = 'HEAD';
@@ -46,8 +47,10 @@ async function getResponse (username: string, website: Website): Promise<Respons
     }
   }
   const {response,data} = await $fetch.raw(url, options)
-    .then(async (response) => ({ response, data: `${await response.text()}` }))
-    .catch((e:FetchError) => ({ response: e.response, data: `${e.data}` }))
+    .then(async (response) => ({ response, data: response._data }))
+    .catch((e: FetchError) => {
+      return ({ response: e.response, data: `${e.data}` })
+    })
 
   return {
     headers: response?.headers,
@@ -73,8 +76,22 @@ export async function checkUsername (username: string, website: Website): Promis
 
   if (website.errorType === 'message') {
     responseData.status = (response.data).includes(website.errorMsg) ? QueryStatus.AVAILABLE : QueryStatus.CLAIMED
-  } else {
-    responseData.status = (response.statusCode > 200 && response.statusCode < 300) ? QueryStatus.CLAIMED : QueryStatus.AVAILABLE
+  }
+  else if (website.errorType === 'status_code') {
+    if(response.statusCode === website.errorCode) {
+      responseData.status = QueryStatus.AVAILABLE;
+    }else if( !(response.statusCode >= 300 || response.statusCode < 200)) {
+      responseData.status = QueryStatus.CLAIMED;
+    }else{
+      responseData.status = QueryStatus.AVAILABLE;
+    }
+  }
+  else if (website.errorType === 'response_url') {
+    if(response.statusCode >= 200 && response.statusCode < 300) {
+      responseData.status = QueryStatus.CLAIMED;
+    }else {
+      responseData.status = QueryStatus.AVAILABLE;
+    }
   }
 
   return {
