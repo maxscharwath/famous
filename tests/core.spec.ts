@@ -8,17 +8,15 @@ describe.concurrent('core', async () => {
     website
   }));
 
-  test('should have websites', () => {
+  test.concurrent('should have websites', () => {
     expect(websites.length).toBeGreaterThan(0);
   });
-  describe.concurrent.each(websites)('test $name', ({ name, website }) => {
-    test.concurrent(`[${name}] should check claimed`, async () => {
-      const response = await checkUsername(website.username_claimed, website);
-      expect(response.status).toBe(QueryStatus.CLAIMED);
-    });
-    test.concurrent(`[${name}] should check available`, async () => {
-      const response = await checkUsername(website.username_unclaimed, website);
-      expect(response.status).toBe(QueryStatus.AVAILABLE);
-    });
+  test.concurrent.each(websites)('test $name', async ({ name, website }) => {
+    const responses = await Promise.all([
+      checkUsername(website.username_claimed, website),
+      checkUsername(website.username_unclaimed, website),
+    ]);
+    expect(responses[0].status, `${name} should have claimed status`).toBe(QueryStatus.CLAIMED);
+    expect(responses[1].status, `${name} should have available status`).toBe(QueryStatus.AVAILABLE);
   });
 });

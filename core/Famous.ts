@@ -88,7 +88,7 @@ export async function checkUsername (username: string, website: Website): Promis
       }
       return flag ? QueryStatus.CLAIMED : QueryStatus.AVAILABLE;
     }
-      if (website.errorType === 'status_code') {
+    if (website.errorType === 'status_code') {
       if (response.statusCode === website.errorCode) {
         return QueryStatus.AVAILABLE;
       } else if (!(response.statusCode >= 300 || response.statusCode < 200)) {
