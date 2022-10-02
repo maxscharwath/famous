@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+   -webkit-tap-highlight-color: transparent;
+   scroll-behavior: smooth;
+}
+
+body {
+   touch-action: pan-y;
+}
+
+::-webkit-scrollbar {
+   @apply bg-gray-800/10 w-1.5 h-1.5;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+   display: none;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+   @apply bg-gray-800/50 rounded-full;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+}
