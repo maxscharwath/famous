@@ -18,7 +18,7 @@ export type WebsiteStatusCode = WebsiteBase & {
 
 export type WebsiteMessage = WebsiteBase & {
   errorType: 'message';
-  errorMsg: string;
+  errorMsg: string | string[];
 }
 
 export type WebsiteResponseUrl = WebsiteBase & {

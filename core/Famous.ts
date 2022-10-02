@@ -1,6 +1,5 @@
 import { Website } from './Website'
 import { $fetch, FetchError, FetchOptions } from 'ohmyfetch'
-import { useFetch } from '#imports'
 
 export enum QueryStatus {
   UNKNOWN = 'UNKNOWN', //Error Occurred While Trying To Detect Username
@@ -74,29 +73,33 @@ export async function checkUsername (username: string, website: Website): Promis
 
   const response = await getResponse(username, website);
 
-  if (website.errorType === 'message') {
-    if(!response.data){
-      responseData.status = QueryStatus.UNKNOWN;
-    }else {
-      responseData.status = response.data.includes(website.errorMsg) ? QueryStatus.AVAILABLE : QueryStatus.CLAIMED
+  responseData.status = (() => {
+    if (website.errorType === 'message') {
+      if (!response.data) {
+        return QueryStatus.UNKNOWN;
+      }
+      let flag = true;
+      const messages = Array.isArray(website.errorMsg) ? website.errorMsg : [website.errorMsg];
+      for (const message of messages) {
+        if (response.data.includes(message)) {
+          flag = false;
+          break;
+        }
+      }
+      return flag ? QueryStatus.CLAIMED : QueryStatus.AVAILABLE;
     }
-  }
-  else if (website.errorType === 'status_code') {
-    if(response.statusCode === website.errorCode) {
-      responseData.status = QueryStatus.AVAILABLE;
-    }else if( !(response.statusCode >= 300 || response.statusCode < 200)) {
-      responseData.status = QueryStatus.CLAIMED;
-    }else{
-      responseData.status = QueryStatus.AVAILABLE;
+      if (website.errorType === 'status_code') {
+      if (response.statusCode === website.errorCode) {
+        return QueryStatus.AVAILABLE;
+      } else if (!(response.statusCode >= 300 || response.statusCode < 200)) {
+        return QueryStatus.CLAIMED;
+      }
+      return  QueryStatus.AVAILABLE;
     }
-  }
-  else if (website.errorType === 'response_url') {
-    if(response.statusCode >= 200 && response.statusCode < 300) {
-      responseData.status = QueryStatus.CLAIMED;
-    }else {
-      responseData.status = QueryStatus.AVAILABLE;
+    if (website.errorType === 'response_url') {
+      return response.statusCode >= 200 && response.statusCode < 300 ? QueryStatus.CLAIMED : QueryStatus.AVAILABLE
     }
-  }
+  })()
 
   return {
     ...responseData,
