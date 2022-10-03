@@ -1,4 +1,8 @@
 {
+  "name": "famous",
+  "version": "0.0.1",
+  "description": "Track social media accounts in a web platform",
+  "author": "Maxime Scharwath <maxscharwath@gmail.com>",
   "private": true,
   "scripts": {
     "build": "nuxt build",
@@ -22,5 +26,14 @@
     "eslint-plugin-vue": "^9.3.0",
     "nuxt": "3.0.0-rc.11",
     "typescript": "^4.7.4"
-  }
+  },
+  "dependencies": {
+    "@vueuse/core": "^9.3.0"
+  },
+  "main": "index.js",
+  "repository": "https://github.com/maxscharwath/famous.git",
+  "bugs": {
+    "url": "https://github.com/maxscharwath/famous/issues"
+  },
+  "license": "MIT"
 }

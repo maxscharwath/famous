@@ -15,7 +15,7 @@ type ResponseData = {
   data:string
 }
 
-type Response = {
+export type Response = {
   url_main:string;
   url_user:string;
   status:QueryStatus;
