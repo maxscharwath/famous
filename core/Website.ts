@@ -1,4 +1,4 @@
-import { HttpMethod } from 'undici/types/dispatcher'
+import {HttpMethod} from 'undici/types/dispatcher';
 
 type WebsiteBase = {
   regexCheck?: string;
@@ -8,22 +8,22 @@ type WebsiteBase = {
   username_claimed: string;
   username_unclaimed: string;
   request_method?: HttpMethod;
-  request_payload?: any
-}
+  request_payload?: unknown;
+};
 
 export type WebsiteStatusCode = WebsiteBase & {
   errorType: 'status_code';
   errorCode?: number;
-}
+};
 
 export type WebsiteMessage = WebsiteBase & {
   errorType: 'message';
   errorMsg: string | string[];
-}
+};
 
 export type WebsiteResponseUrl = WebsiteBase & {
   errorType: 'response_url';
   errorUrl: string;
-}
+};
 
 export type Website = WebsiteStatusCode | WebsiteMessage | WebsiteResponseUrl;
