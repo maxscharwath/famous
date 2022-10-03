@@ -2,8 +2,7 @@
 
 FAMOUS is a WEB platform that allows users to find social media accounts.
 
-It's easy to use, just enter the username of the person you want to find and FAMOUS will do the rest.
-And it's blazing fast ⚡
+It's easy to use, just enter the username and FAMOUS will do the rest. It's blazing fast ⚡
 
 This project is largely based on the [Sherlock Project](https://github.com/sherlock-project).
 The main difference is that FAMOUS is a web platform, while Sherlock is a python CLI tool.
@@ -11,7 +10,7 @@ The main difference is that FAMOUS is a web platform, while Sherlock is a python
 ## Development
 One main goal of this project is to be able to be easily deployed on the edge ☁️.
 
-Why? Because the edge is the best place to run this kind of project. And the result is a very fast⚡!
+Why? Because the edge is the best place to run this kind of project. And the result is very fast⚡!
 
 ### Technologies Choice
 The main technologies used are:
