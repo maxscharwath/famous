@@ -5,27 +5,35 @@
   "author": "Maxime Scharwath <maxscharwath@gmail.com>",
   "private": true,
   "scripts": {
+    "test": "vitest",
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "lint": "eslint --ext .js,.ts,.vue --ignore-path .eslintignore .",
-    "format": "yarn lint --fix"
+    "clean": "gts clean",
+    "fix": "gts fix"
   },
   "devDependencies": {
     "@nuxtjs/tailwindcss": "^5.3.3",
+    "@types/node": "^14.11.2",
     "@typescript-eslint/eslint-plugin": "^5.34.0",
     "@typescript-eslint/parser": "^5.34.0",
+    "@vitest/coverage-c8": "^0.23.4",
+    "@vitest/ui": "^0.23.4",
     "@vue/eslint-config-standard": "^8.0.1",
     "eslint": "^8.22.0",
     "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-nuxt": "^4.0.0",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-tailwindcss": "^3.6.0",
     "eslint-plugin-vue": "^9.3.0",
+    "gts": "^3.1.1",
     "nuxt": "3.0.0-rc.11",
-    "typescript": "^4.7.4"
+    "typescript": "^4.7.4",
+    "vitest": "^0.23.4"
   },
   "dependencies": {
     "@vueuse/core": "^9.3.0"
