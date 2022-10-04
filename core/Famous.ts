@@ -84,9 +84,13 @@ export async function checkUsername(
   const response = await getResponse(username, website);
 
   responseData.status = (() => {
+    console.log('Error Type: ', website.errorType);
+    console.log('Error Code: ', response.statusCode);
+    console.log('Error Data: ', response.data ?? 'No Data');
     switch (website.errorType) {
       case 'message': {
         if (!response.data) {
+          console.log('No Data');
           return QueryStatus.UNKNOWN;
         }
         let flag = true;
@@ -115,8 +119,10 @@ export async function checkUsername(
           : QueryStatus.AVAILABLE;
       }
     }
+    console.log('Unknown Error Type');
     return QueryStatus.UNKNOWN;
   })();
+  console.log('Status: ', responseData.status);
 
   return {
     ...responseData,
