@@ -53,10 +53,8 @@ async function getResponse(
   }
   const {response, data} = await $fetch
     .raw(url, options)
-    .then(async response => ({response, data: response._data}))
-    .catch((e: FetchError) => {
-      return {response: e.response, data: e.data};
-    });
+    .then(async response => ({response, data: `${await response.text()}`}))
+    .catch((e: FetchError) => ({response: e.response, data: `${e.data}`}));
 
   return {
     headers: response?.headers,
